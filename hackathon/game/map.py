@@ -5,6 +5,7 @@ import operator
 class Map(dict):
     def __init__(self):
         super().__init__(self)
+        self.noisemaps = {}
 
     def dist(self, robot1, robot2):
         coords1 = self[robot1]
@@ -27,3 +28,19 @@ class Map(dict):
         coors = tuple(coors)
         return map(operator.itemgetter(0),
                    filter(lambda item: self.dist_loc(item[0], *coors) < rad, self.items()))
+
+    def add_noisemap(self, name, noisemap):
+        self.noisemaps[name] = noisemap
+
+    def set_noisemap(self, name, noisemap):
+        self.add_noisemap(name, noisemap)
+
+    def del_noisemap(self, name):
+        del self.noisemaps[name]
+
+    def get_noise(self, *coors):
+        noise = {}
+        for k, v in self.noisemaps.items():
+            noise[k] = v[coors]
+
+        return noise

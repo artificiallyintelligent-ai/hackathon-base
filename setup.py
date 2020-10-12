@@ -21,6 +21,9 @@ setup(
 
     install_requires=[
         'RestrictedPython',
+        'noise',
+        'numpy',
+        'matplotlib'
     ],
 
     classifiers=[

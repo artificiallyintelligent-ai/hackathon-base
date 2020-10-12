@@ -1,0 +1,7 @@
+RestrictedPython
+setuptools
+
+numpy
+matplotlib
+
+noise

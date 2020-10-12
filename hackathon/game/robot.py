@@ -13,7 +13,8 @@ def partial(func, instance):
 def extract_useful(instance):
     clazz = type(instance)
     funcs = {k: partial(v, instance)
-             for k, v in clazz.__dict__.items() if callable(v) if not k.startswith('_')}
+             for k, v in clazz.__dict__.items() if callable(v) if not (k.startswith('_') or k.endswith('_'))}
+    #                                            function      cannot start or end with '_'
 
     everything_else = {k: instance
                        for k, v in clazz.__dict__.items() if not callable(v) if not k.startswith('_') if
@@ -30,9 +31,9 @@ class Robot(CodeRunner):
     def __init__(self, game, code: str):
         env = copy.copy(game.env)
         env.globals.update(extract_useful(self))
-        print(env.globals)
         super().__init__(env, code)
-        self.game = game
+        
+        self.game = game  # reference map by self.game.map
         self.id = Robot.globalcount
         Robot.globalcount += 1
 
