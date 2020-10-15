@@ -2,7 +2,7 @@ import hackathon
 
 
 class Game:
-    def __init__(self, robots: list, *args, **kwargs):  # robots is list of str
+    def __init__(self, robots: list, *args, **kwargs):  # robots is list of str (code)
         self.env = hackathon.container.Environment()
         self.robots = robots
 
