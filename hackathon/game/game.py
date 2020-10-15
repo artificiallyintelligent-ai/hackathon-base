@@ -1,13 +1,10 @@
-from hackathon import Environment
-from hackathon import Map
+import hackathon
 
 
 class Game:
-    def __init__(self, robots: list, *args, **kwargs):
-        self.env = Environment()
+    def __init__(self, robots: list, *args, **kwargs):  # robots is list of str
+        self.env = hackathon.container.Environment()
         self.robots = robots
-
-        self.map = Map()
 
     def run(self, *args, **kwargs):
         pass

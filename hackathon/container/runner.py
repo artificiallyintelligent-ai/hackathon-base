@@ -1,5 +1,7 @@
+import copy
 import importlib
 import sys
+import traceback
 
 from RestrictedPython import safe_builtins, PrintCollector
 
@@ -11,7 +13,7 @@ def import_call(allowed_modules):
         assert (isinstance(name, str))
 
         if name in allowed_modules and name in sys.modules:
-            sys.modules.pop('random', None)
+            sys.modules.pop(name, None)
             return importlib.import_module(name)
 
         if 'stubs' in name:
@@ -22,10 +24,10 @@ def import_call(allowed_modules):
 
         raise Exception('Disallowed import call: {}'.format(name))
 
+    return inner
+
 
 builts = safe_builtins
-builts['getattr'] = builts['_getattr_']
-del builts['_getattr_ ']
 extra_builtins = {
     'print': PrintCollector,
     'super': super,
@@ -49,11 +51,12 @@ restricted_globals = {
 
 
 def build_globals(env):
-    restricted_globals['__import__'] = import_call(allowed_modules=env.allowed_modules)
+    rglobals = copy.copy(restricted_globals)
+    rglobals['__builtins__']['__import__'] = import_call(allowed_modules=env.allowed_modules)
 
-    restricted_globals.update(env.globals)
+    rglobals.update(env.globals)
 
-    return restricted_globals
+    return rglobals
 
 
 class CodeRunner:
@@ -63,11 +66,17 @@ class CodeRunner:
         self.globals = build_globals(env)
 
     def init_code(self):
-        exec(self.code, self.globals)
+        try:
+            exec(self.code, self.globals)
+        except:
+            traceback.print_exc()
 
     def run(self, funcname='turn'):
-        if funcname in self.globals.keys():
-            code = self.globals[funcname].__code__
-            exec(code, self.globals)
-        else:
-            raise NotImplementedError(f'Function {funcname} is not implemented')
+        try:
+            if funcname in self.globals.keys():
+                code = self.globals[funcname].__code__
+                exec(code, self.globals)
+            else:
+                raise NotImplementedError(f'Function {funcname} is not implemented')
+        except:
+            traceback.print_exc()
