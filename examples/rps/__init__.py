@@ -1,0 +1,1 @@
+from .rpsgame import RPSGame

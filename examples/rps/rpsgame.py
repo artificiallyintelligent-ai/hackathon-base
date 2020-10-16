@@ -1,5 +1,5 @@
 from examples.rps.rpsbot import RPSRobot
-from examples.rps.team import RobotTeam
+from examples.rps.robotteam import RobotTeam
 import hackathon
 
 beat = {"R": "P", "P": "S", "S": "R"}

@@ -1,4 +1,4 @@
-from examples.rps.team import RobotTeam
+from examples.rps.robotteam import RobotTeam
 from hackathon import Robot
 
 
